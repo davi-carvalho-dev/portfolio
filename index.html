@@ -10,6 +10,12 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <script>
+      try {
+        if (localStorage.getItem("theme") === "light")
+          document.documentElement.dataset.theme = "light";
+      } catch {}
+//   </script>
 
     <title>portfolio</title>
   </head>
