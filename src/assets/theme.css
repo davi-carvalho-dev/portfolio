@@ -1,0 +1,190 @@
+/* =============================================================
+   TEMA DO PORTFÓLIO — Tailwind CSS v4
+   -------------------------------------------------------------
+   Como funciona:
+   - Cada variável --color-NOME vira classes do Tailwind:
+       bg-NOME, text-NOME, border-NOME, ring-NOME, from-NOME, to-NOME...
+     Ex.: --color-surface  ->  bg-surface, border-surface
+   - Cada --shadow-NOME vira a classe shadow-NOME.
+   - Fora do Tailwind (CSS puro), use a variável direto:
+       color: var(--color-text-primary);
+
+   Organização:
+   1. PRIMITIVOS  -> a paleta crua (hex). Só mude cores AQUI.
+   2. SEMÂNTICOS  -> nomes por função (fundo, texto, borda...).
+                     Apontam para os primitivos via var().
+   Regra prática: nos componentes, prefira os SEMÂNTICOS
+   (bg-surface, text-text-muted) em vez dos primitivos
+   (bg-gray-900). Assim, trocar o tema é mexer em um lugar só.
+   ============================================================= */
+
+@theme {
+
+  /* =========================================================
+     1. PRIMITIVOS — paleta crua
+     ========================================================= */
+
+  /* Base -> bg-black, text-white */
+  --color-black: #000000;
+  --color-white: #FFFFFF;
+
+  /* Escala do vermelho -> bg-red-500, text-red-300, border-red-700...
+     Use quando precisar de um tom específico que não tem nome
+     semântico (ex.: badge suave bg-red-900/40 text-red-200).
+     Atenção: substitui a escala "red" padrão do Tailwind. */
+  --color-red-50:  #FFF1F1;
+  --color-red-100: #FFE0E0;
+  --color-red-200: #FFC2C2;
+  --color-red-300: #FF9999;
+  --color-red-400: #FF6666;
+  --color-red-500: #E62020; /* = primary */
+  --color-red-600: #CC1C1C;
+  --color-red-700: #B81414; /* = primary-dark */
+  --color-red-800: #8F1010;
+  --color-red-900: #650B0B;
+
+  /* Escala de cinza -> bg-gray-800, text-gray-400...
+     Atenção: substitui a escala "gray" padrão do Tailwind. */
+  --color-gray-50:  #F9F9F9;
+  --color-gray-100: #F2F2F2;
+  --color-gray-200: #E5E5E5;
+  --color-gray-300: #D1D1D1;
+  --color-gray-400: #A3A3A3; /* = text-muted */
+  --color-gray-500: #737373;
+  --color-gray-600: #525252;
+  --color-gray-700: #3A3A3A;
+  --color-gray-800: #242424;
+  --color-gray-900: #111111; /* = surface */
+
+
+  /* =========================================================
+     2. MARCA — o vermelho principal
+     Onde usar: botões principais, links, destaques, ícones ativos.
+       <button class="bg-primary hover:bg-primary-dark text-white">
+       <a class="text-primary hover:text-primary-light">
+     ========================================================= */
+
+  --color-primary:       var(--color-red-500); /* cor padrão da marca */
+  --color-primary-dark:  var(--color-red-700); /* hover/active de botão */
+  --color-primary-light: #FF3B3B;              /* hover de link/texto sobre fundo escuro (fora da escala) */
+
+
+  /* =========================================================
+     3. SUPERFÍCIES — fundos, do mais escuro ao mais claro
+     Onde usar: camadas da página. Quanto mais "na frente", mais claro.
+       <body class="bg-background">
+       <section class="bg-background-secondary">   (faixas alternadas)
+       <div class="bg-surface hover:bg-surface-hover">  (card)
+       <div class="bg-surface-light">               (input, card dentro de card)
+     ========================================================= */
+
+  --color-background:           var(--color-black);      /* fundo da página */
+  --color-background-secondary: #0A0A0A;                 /* seções alternadas, footer (fora da escala) */
+  --color-surface:              var(--color-gray-900);   /* cards, navbar, modais */
+  --color-surface-light:        #1A1A1A;                 /* inputs, elementos dentro de cards (fora da escala) */
+  --color-surface-hover:        #222222;                 /* hover de card/item de lista (fora da escala) */
+
+
+  /* =========================================================
+     4. TEXTO — do mais forte ao mais fraco
+     Obs.: o prefixo "text-" se repete na classe (text-text-muted).
+       <h1 class="text-text-primary">
+       <p class="text-text-secondary">
+       <span class="text-text-muted">  (datas, legendas, tags)
+       <button disabled class="text-text-disabled">
+     ========================================================= */
+
+  --color-text-primary:   var(--color-white);    /* títulos, texto principal */
+  --color-text-secondary: #D4D4D4;               /* parágrafos, descrições (fora da escala, ~gray-300) */
+  --color-text-muted:     var(--color-gray-400); /* legendas, metadados, placeholders */
+  --color-text-disabled:  #666666;               /* itens desabilitados (fora da escala) */
+
+
+  /* =========================================================
+     5. BORDAS — da mais escura à mais clara
+     Obs.: a classe repete o nome (border-border).
+       <div class="border border-border">           (card padrão)
+       <hr class="border-border-dark">              (divisor discreto)
+       <input class="border border-border-light focus:border-border-primary">
+     ========================================================= */
+
+  --color-border-dark:    #171717;               /* divisores bem sutis (fora da escala) */
+  --color-border:         #262626;               /* borda padrão de cards/inputs (fora da escala, ~gray-800) */
+  --color-border-light:   #404040;               /* borda com mais contraste, hover (fora da escala, ~gray-700) */
+  --color-border-primary: var(--color-primary);  /* foco, item selecionado, destaque */
+
+
+  /* =========================================================
+     6. ESTADOS — feedback ao usuário
+     Onde usar: formulário de contato, toasts, alertas, badges.
+       <p class="text-error">Campo obrigatório</p>
+       <div class="bg-success/10 text-success border border-success/30">Enviado!</div>
+     ========================================================= */
+
+  --color-success: #22C55E; /* sucesso, mensagem enviada */
+  --color-warning: #F59E0B; /* aviso */
+  --color-error:   #EF4444; /* erro de validação */
+  --color-info:    #3B82F6; /* informação neutra */
+
+
+  /* =========================================================
+     7. GRADIENTE — vermelho vivo -> vermelho escuro
+     Onde usar: hero, botão de destaque, texto em gradiente.
+       <div class="bg-linear-to-r from-gradient-start to-gradient-end">
+       <h1 class="bg-linear-to-r from-gradient-start to-gradient-end bg-clip-text text-transparent">
+     ========================================================= */
+
+  --color-gradient-start: var(--color-primary);
+  --color-gradient-end:   #7A0C0C; /* fora da escala (entre red-800 e red-900) */
+
+
+  /* =========================================================
+     8. SOMBRAS — brilho vermelho (glow) a partir da primária
+     Onde usar: hover de botão principal, card em destaque.
+       <button class="hover:shadow-primary">
+       <div class="shadow-primary-lg">
+     ========================================================= */
+
+  --shadow-primary:    0 0 20px color-mix(in srgb, var(--color-primary) 25%, transparent);
+  --shadow-primary-lg: 0 0 40px color-mix(in srgb, var(--color-primary) 35%, transparent);
+}
+
+
+/* =============================================================
+   TEMA CLARO — o "inverso" do tema escuro
+   -------------------------------------------------------------
+   O padrão é ESCURO (o @theme acima). Quando o JS
+   (theme/theme-toggle.js) coloca data-theme="light" no <html>,
+   estes valores sobrescrevem os semânticos. Os componentes não
+   mudam nada: bg-background, text-text-primary etc. trocam sozinhos.
+   O vermelho da marca continua o mesmo nos dois temas.
+   ============================================================= */
+
+:root {
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  /* Marca — hover de link mais escuro para contrastar com fundo claro */
+  --color-primary-light: var(--color-red-700);
+
+  /* Superfícies */
+  --color-background:           var(--color-white);
+  --color-background-secondary: var(--color-gray-50);
+  --color-surface:              var(--color-gray-100);
+  --color-surface-light:        var(--color-white);
+  --color-surface-hover:        var(--color-gray-200);
+
+  /* Texto */
+  --color-text-primary:   var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-700);
+  --color-text-muted:     var(--color-gray-500);
+  --color-text-disabled:  var(--color-gray-400);
+
+  /* Bordas */
+  --color-border-dark:  var(--color-gray-100);
+  --color-border:       var(--color-gray-200);
+  --color-border-light: var(--color-gray-300);
+}
