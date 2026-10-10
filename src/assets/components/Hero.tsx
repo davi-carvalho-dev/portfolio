@@ -1,32 +1,37 @@
-import type { SVGProps } from "react";
+import { useRef, type PointerEvent, type SVGProps } from "react";
 import { useLanguage } from "../components/LanguageContext";
-
-// =============================================================
-// HERO — template para editar
-// -------------------------------------------------------------
-// - Textos: ficam em i18n/translations.ts (bloco "hero").
-// - Foto/ilustração: troque IMAGE_SRC (ou deixe null para o
-//   placeholder com as iniciais).
-// - Cores: tudo vem do theme.css, então já funciona no claro e
-//   no escuro sem mexer aqui.
-// - Quer tirar um bloco (ex.: stats)? Apague o trecho marcado no JSX.
-// =============================================================
-
-const IMAGE_SRC: string | null = null; // ex.: "/images/davi.png"
+import profilePhoto from "../images/profile-pic.png";
+import TechIcons from "./TechIcons";
 
 export default function Hero() {
   const t = useLanguage().t.hero;
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Atualiza a posição do brilho direto no CSS (--mx/--my), sem
+  // re-renderizar o React a cada movimento do mouse.
+  function handlePointerMove(e: PointerEvent<HTMLElement>) {
+    if (e.pointerType !== "mouse") return; // no celular o brilho fica parado
+    const el = sectionRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    el.style.setProperty("--mx", `${e.clientX - rect.left}px`);
+    el.style.setProperty("--my", `${e.clientY - rect.top}px`);
+  }
 
   return (
     <section
+      ref={sectionRef}
+      onPointerMove={handlePointerMove}
       id="home"
       // pt-* compensa o header fixo; scroll-mt-* para o link #home
       className="relative isolate flex min-h-svh scroll-mt-20 items-center overflow-hidden bg-background pt-28 pb-16 md:pt-32"
     >
-      {/* Fundo decorativo: brilho vermelho + grade sutil. Apague se não quiser. */}
+      {/* Fundo decorativo */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -top-40 left-1/2 size-[36rem] -translate-x-1/2 rounded-full bg-primary/15 blur-3xl md:left-3/4" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--color-border-dark)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border-dark)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_at_center,black_30%,transparent_75%)]" />
+        {/* Grade andando na diagonal (cinza no escuro, vermelha no claro) */}
+        <div className="absolute inset-0 animate-grid-move bg-[linear-gradient(to_right,var(--color-grid)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-grid)_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_at_center,black_30%,transparent_75%)]" />
+        {/* Brilho que segue o mouse (vermelho no escuro, preto no claro) */}
+        <div className="absolute inset-0 bg-[radial-gradient(36rem_circle_at_var(--mx)_var(--my),var(--color-glow),transparent_70%)] transition-[--mx,--my] duration-500 ease-out" />
       </div>
 
       <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1.2fr_1fr] lg:gap-16 lg:px-8">
@@ -73,7 +78,7 @@ export default function Hero() {
             </a>
           </div>
 
-          {/* Números — apague o bloco se não quiser */}
+          {/* Números */}
           {t.stats?.length > 0 && (
             <dl className="mt-12 grid w-full max-w-md grid-cols-3 gap-6 border-t border-border pt-8">
               {t.stats.map((s) => (
@@ -86,22 +91,23 @@ export default function Hero() {
           )}
         </div>
 
-        {/* ---------- Imagem ---------- */}
-        <div className="relative mx-auto w-full max-w-sm lg:max-w-none">
-          <div className="absolute -inset-4 -z-10 rounded-4xl bg-linear-to-br from-gradient-start/30 to-transparent blur-2xl" />
-          <div className="aspect-4/5 overflow-hidden rounded-3xl border border-border bg-surface shadow-primary-lg">
-            {IMAGE_SRC ? (
-              <img
-                src={IMAGE_SRC}
-                alt="Davi Carvalho"
-                className="size-full object-cover"
-                fetchPriority="high"
-              />
-            ) : (
-              <div className="grid size-full place-items-center bg-linear-to-br from-surface to-surface-light">
-                <span className="text-7xl font-bold text-text-disabled">DC</span>
-              </div>
-            )}
+        {/* ---------- Card: foto + tecnologias ---------- */}
+        <div className="mx-auto w-full max-w-sm lg:max-w-md">
+          <div className="rounded-3xl border border-border bg-surface/70 p-6 backdrop-blur-sm sm:p-8">
+            <img
+              src={profilePhoto}
+              alt="Foto de perfil"
+              width={640}
+              height={640}
+              fetchPriority="high"
+              className="mx-auto aspect-square w-full max-w-72 rounded-full object-cover"
+            />
+            <div className="mt-8 border-t border-border pt-6">
+              <p className="mb-4 text-center text-xs font-semibold uppercase tracking-[0.2em] text-text-muted">
+                Tecnologias
+              </p>
+              <TechIcons />
+            </div>
           </div>
         </div>
       </div>

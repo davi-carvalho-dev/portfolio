@@ -183,8 +183,49 @@
   --color-text-muted:     var(--color-gray-500);
   --color-text-disabled:  var(--color-gray-400);
 
-  /* Bordas */
-  --color-border-dark:  var(--color-gray-100);
-  --color-border:       var(--color-gray-200);
-  --color-border-light: var(--color-gray-300);
+    /* Bordas — vermelhas no claro para não sumirem no fundo branco */
+  --color-border-dark:  var(--color-red-200);
+  --color-border:       var(--color-red-300);
+  --color-border-light: var(--color-red-400);
+}
+
+
+/* =============================================================
+   HERO — brilho que segue o mouse + grade animada
+   -------------------------------------------------------------
+   --color-glow: cor do brilho (vermelho no escuro, preto no claro)
+   --color-grid: cor das linhas da grade (cinza no escuro, vermelho no claro)
+   ============================================================= */
+
+@theme {
+  /* classe animate-grid-move: a grade anda na diagonal sem parar */
+  --animate-grid-move: grid-move 6s linear infinite;
+
+  @keyframes grid-move {
+    from { background-position: 0 0; }
+    to   { background-position: 4rem 4rem; } /* = tamanho de 1 quadrado */
+  }
+}
+
+/* Registra --mx/--my como posições para o navegador conseguir
+   animar a troca de valor (o brilho "desliza" atrás do mouse). */
+@property --mx {
+  syntax: "<length-percentage>";
+  inherits: true;
+  initial-value: 75%;
+}
+@property --my {
+  syntax: "<length-percentage>";
+  inherits: true;
+  initial-value: 40%;
+}
+
+:root {
+  --color-glow: color-mix(in srgb, var(--color-primary) 28%, transparent);
+  --color-grid: var(--color-border);
+}
+
+:root[data-theme="light"] {
+  --color-glow: color-mix(in srgb, var(--color-black) 14%, transparent);
+    --color-grid: var(--color-red-200);
 }
